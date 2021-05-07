@@ -4,7 +4,7 @@ import FirstPage from './FirstPage';
 
 // TODO : try sort tahun
 const Home = () => {
-  const { wilayah, tahun, data } = useContext(GlobalContext);
+  const { wilayah, tahun, data, error } = useContext(GlobalContext);
   // unique data
   const [selected, setSelected] = useState(0);
   const set_of_skpd = [
@@ -25,6 +25,11 @@ const Home = () => {
           </option>
         ))}
       </select>
+      {error.isError ? (
+        <h2 className="text-red-500 text-xl font-bold">{error.message}</h2>
+      ) : (
+        ''
+      )}
       <br />
       <FirstPage selected={selected} />
     </div>

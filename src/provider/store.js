@@ -13,16 +13,21 @@ export const GlobalContextProvider = ({ children }) => {
   // initial data render
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(endPoint);
-      const results = await response.json();
-      const resData = await results.data;
-      // setData to result
-      console.log('results -> ', results);
-      if (resData) {
-        setData(results.data);
-      } else {
-        setError({ message: 'Failed to get Data', isError: true });
+      try {
+        const response = await fetch(endPoint).then(results => results.json());
+        setData(response.data);
+        console.log(response);
+      } catch (error) {
+        console.log('error Message : ', error);
+        setError(prevState => ({
+          message: 'Failed to get Data',
+          isError: true
+        }));
       }
+      // const results = await response.json();
+      // const resData = await results.data;
+      // setData to result
+
       // setData(resData);
     };
     fetchData();
