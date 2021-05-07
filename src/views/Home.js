@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../provider/store';
 import FirstPage from './FirstPage';
 
@@ -7,11 +7,16 @@ const Home = () => {
   const { wilayah, tahun, data, error } = useContext(GlobalContext);
   // unique data
   const [selected, setSelected] = useState(0);
+  const [selectedSKPD, setSelectedSKPD] = useState([]);
   const set_of_skpd = [
     ...new Map(data.map(item => [item['id_skpd'], item])).values()
   ];
   const selectHandler = e => {
     setSelected(e.target.value);
+    let skpd = e.target.value;
+    let skpd_selected = data.filter(item => item.id_skpd == skpd);
+    console.log(skpd_selected);
+    setSelectedSKPD(skpd_selected);
   };
   return (
     <div>
@@ -25,13 +30,11 @@ const Home = () => {
           </option>
         ))}
       </select>
-      {error.isError ? (
+      {error.isError && (
         <h2 className="text-red-500 text-xl font-bold">{error.message}</h2>
-      ) : (
-        ''
       )}
-      <br />
-      <FirstPage selected={selected} />
+      <hr />
+      <FirstPage selected={selectedSKPD} />
     </div>
   );
 };
