@@ -1,9 +1,10 @@
 import React from 'react';
 
-const FirstPage = ({ data }) => {
+const FirstPage = ({ selected }) => {
   return (
     <div className="container p-5">
-      <table>
+      <h1>{selected}</h1>
+      {/* <table>
         <thead>
           <tr>
             <th>Nama SKPD</th>
@@ -12,7 +13,7 @@ const FirstPage = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, i) => (
+          {skpd.map((item, i) => (
             <tr key={i}>
               <td>{item.nama_skpd}</td>
               <td>{item.nama_urusan}</td>
@@ -20,7 +21,7 @@ const FirstPage = ({ data }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 };
