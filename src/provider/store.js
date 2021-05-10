@@ -16,7 +16,6 @@ export const GlobalContextProvider = ({ children }) => {
       try {
         const response = await fetch(endPoint).then(results => results.json());
         setData(response.data);
-        console.log(response);
       } catch (error) {
         console.log('error Message : ', error);
         setError(prevState => ({
@@ -39,6 +38,7 @@ export const GlobalContextProvider = ({ children }) => {
     const nama_wilayah = new Set(data.map(item => item.nama_wil));
     setWilayah(nama_wilayah);
   }, [data]);
+  console.log('initial length : ', data.length);
 
   return (
     <GlobalContext.Provider value={{ data, error, tahun, wilayah }}>
