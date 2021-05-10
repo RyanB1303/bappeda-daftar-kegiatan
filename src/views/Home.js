@@ -32,10 +32,8 @@ const Home = () => {
       }
       return true;
     });
-    console.log('newFilter :>> ', newFilter);
     setFilteredData(newFilter);
   }, [data, selected]);
-  console.log('filteredData => ', filteredData);
 
   return (
     <div>
@@ -47,9 +45,7 @@ const Home = () => {
         onChange={handleSelectSkpd}
         className="mx-5 my-2 p-2"
       >
-        <option disabled selected>
-          Pilih SKPD
-        </option>
+        <option value={selected}>Pilih SKPD</option>
         {set_of_skpd.map((item, i) => (
           <option value={item.id_skpd} key={i}>
             {item.nama_skpd}
@@ -62,9 +58,7 @@ const Home = () => {
         onChange={handleSelectProgram}
         className="mx-5 my-2 p-2"
       >
-        <option disabled selected>
-          Pilih Program
-        </option>
+        <option value={selected}>Pilih Program</option>
         {set_id_program.map((item, i) => (
           <option value={item.id_program} key={i}>
             {item.nama_program}
