@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../provider/store';
-import FirstPage from './FirstPage';
+// import FirstPage from './FirstPage';
 import FilterPage from './FilterPage';
 
 // TODO : try sort tahun
@@ -39,8 +39,8 @@ const Home = () => {
 
   return (
     <div>
-      <h1 className="title text-center text-5xl bg-gray-100">{wilayah}</h1>
-      <div className="app-content min-w- flex-row mt-5 mx-5 px-5">
+      <h1 className="title p-7 text-center text-5xl bg-gray-100">{wilayah}</h1>
+      <div className="app-content min-w- flex-row m-5 p-5">
         <p>Tahun : {`${tahun},`}</p>
         {/* <select
         name="nama_skpd"
@@ -73,7 +73,7 @@ const Home = () => {
         )}
         <br />
         {/* {filteredData && <FirstPage selected={filteredData} />} */}
-        <FilterPage />
+        <FilterPage data={data} />
       </div>
     </div>
   );

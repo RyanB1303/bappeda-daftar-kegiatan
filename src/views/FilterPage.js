@@ -1,42 +1,87 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { tags } from '../data/Filter';
-import { GlobalContext } from '../provider/store';
+// App Flow
+/* 
+  1. App get data from API and save it in global state -> in provider/store.js
+  2. User make tag in data
+  3. Filter will trigger this amount of effect
+  4.1 Store the tags to localStorage with schema like in data/Filter.js
+  4.2 The tags than extracted into several state x---x unimportant , skip this
+  4.3 Tags then will render and used as filter in data api
 
-const FilterPage = () => {
-  const { data } = useContext(GlobalContext);
-  const [tags, setTags] = useState([]);
-  const [items, setItems] = useState([]);
-  const [giat, setGIat] = useState([]);
-  const [filter, setFilter] = useState([]);
+ */
+
+const FilterPage = ({ data }) => {
+  const [kegiatan, setKegiatan] = useState([]); // array kegiatan yang di filter , default kosong
+  const [filter, setFilter] = useState([]); // hasil penyaringan data
+  const [tagWanted, setTagWanted] = useState([]); // tag apa yang diinginkan
 
   useEffect(() => {
-    const tagKey = tags.map(item => Object.values(item['tagName']));
-    const itemName = tags.map(item => Object.values(item['items'])); // TODO rename itemName to kegiatan key
-    const giatKey = tags.map(item => Object.values(item));
-    setGIat(giatKey);
-    setTags(tagKey);
-    setItems(itemName);
+    filter.length === 0 && setFilter(data);
+  }, [filter, data]);
 
-    // filter data
-    const filter = data.filter(item => {
-      return items[0].includes(item.id_sub_giat);
+  useEffect(() => {
+    // effect akan berjalan setiap kali user memilih tag / filter
+    // filterWanter akan mengecek apakah ada tagWanted dengan id x di dalam item.tagId
+    // filtered merupakan hasil penyaringan , yang akan diubah ke flat array
+    // lalu simpan filtered kedalam kegiatan
+
+    const filterWanter =
+      tagWanted && tags.filter(item => tagWanted.includes(item.tagId));
+    const filtered = filterWanter
+      .map(item => Object.values(item['items']))
+      .flat();
+    setKegiatan(filtered); // simpan ke kegiatan untuk dijadikan filter diatas
+  }, [tagWanted]);
+
+  useEffect(() => {
+    // effect akan berjalan setiap kali ada kegiatan baru masuk
+    // effect akan melakukan penyaringan data ( filter ) dan menyimpannya di filter state
+    const filters = data.filter(item => {
+      return kegiatan.includes(item.id_sub_giat);
     });
-    console.log('filter :>> ', items[0], filter);
-    setFilter(filter);
-  }, []);
+    setFilter(filters);
+  }, [data, kegiatan]);
+
+  const filteClickHandler = d => {
+    // handle click tombol filter yang sudah ada untuk mengirimkan id ke tagWanted
+    // setTagWanted(prevState => [...prevState, d]);
+    setTagWanted([d]);
+  };
+
+  const handleChange = e => {
+    const sub_giat = e.target.value;
+    console.log('sub_giat :>> ', sub_giat);
+  };
+  /*  const addFilterHandler = e => {
+    const filterName = e.target.value;
+    if (e.key == 'Enter' && filterName) {
+      setTags(prevState => [...prevState, filterName]);
+    }
+  }; */
 
   return (
     <div className="min-w- flex-row mx-5 px-5">
       <h4>Filter :</h4>
-      <div className="flex flex-wrap border">
-        {tags.map((tag, i) => (
-          <div
-            className="flex-initial mx-1 my-2 p-5 text-sm border border-gray-800"
-            key={i}
-          >
-            {tag}
-          </div>
-        ))}
+      <div className="flex flex-wrap p-3 border border-black">
+        {tags.length && // TODO : Add highlihgt class to indicate filter selected
+          tags.map(tag => (
+            <div
+              className="flex-initial mx-1 my-2 p-5 text-sm border border-gray-800 cursor-pointer"
+              key={tag.tagId}
+              onClick={() => filteClickHandler(tag.tagId)}
+            >
+              {tag.tagName}
+            </div>
+          ))}
+        <input
+          type="text"
+          name="filterName"
+          id="filterName"
+          placeholder="Input new filter"
+          className="flex-initial mx-1 my-2 p-5 text-gray-900 text-sm border-4 border-blue-400"
+          // onKeyDown={addFilterHandler}
+        />
       </div>
       <br />
       <br />
@@ -53,30 +98,37 @@ const FilterPage = () => {
             <th className="mx-5 p-5 border border-gray-900">ID Sub Kegiatan</th>
             <th className="mx-5 p-5 border border-gray-900">Tahun Kegiatan</th>
             <th className="mx-5 p-5 border border-gray-900">Pagu</th>
-            <th className="mx-5 p-5 border border-gray-900"> </th>
+            <th className="mx-5 p-5 border border-gray-900">Filter </th>
           </tr>
         </thead>
         <tbody>
           {filter.map((item, i) => (
             <tr key={i}>
-              <td className="p-5 border border-gray-600">{i + 1}</td>
+              <td className="p-5 text-center border border-gray-600">
+                {i + 1}
+              </td>
               <td className="p-5 border border-gray-600">{item.nama_skpd}</td>
               <td className="p-5 border border-gray-600">
                 {item.nama_sub_giat}
               </td>
-              <td className="p-5 border border-gray-600">{item.id_sub_giat}</td>
-              <td className="p-5 border border-gray-600">{item.tahun}</td>
+              <td className="p-5 text-center border border-gray-600">
+                {item.id_sub_giat}
+              </td>
+              <td className="p-5 text-center border border-gray-600">
+                {item.tahun}
+              </td>
               <td className="p-5 border border-gray-600">
                 {item.pagu &&
                   item.pagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               </td>
-              <td className="p-5 border border-gray-600">
+              <td className="p-5 text-center border border-gray-600">
                 <input
                   type="checkbox"
                   name="sub_giat"
                   id={item.id_sub_giat}
                   value={item.id_sub_giat}
-                />{' '}
+                  onChange={handleChange}
+                />
               </td>
             </tr>
           ))}

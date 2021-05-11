@@ -1,15 +1,18 @@
 // TODO : Add user base to identify tags created
 export const tags = [
   {
-    tagName: ['Alat Kantor', 'SKPD', 'SIKS'],
-    items: [8898, 8917, 8922]
+    tagId: 1,
+    tagName: 'Alat Kantor',
+    items: [8898]
   },
   {
-    tagName: ['Alat Berat', 'SmartCity', 'SIPD'],
-    items: [8898, 8917, 8922]
+    tagId: 2,
+    tagName: 'SmartCity',
+    items: [8917]
   },
   {
-    tagName: ['Alat IT', 'Server', 'Teknologi'],
-    items: [8898, 8917, 8922]
+    tagId: 3,
+    tagName: 'Teknologi',
+    items: [8922]
   }
 ];
