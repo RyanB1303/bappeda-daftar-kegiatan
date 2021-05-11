@@ -10,12 +10,14 @@ import { tags } from '../data/Filter';
   4.3 Tags then will render and used as filter in data api
 
  */
-
+// TODO : REFACTOR THIS !!!!!!!!!!!!!!!!!
 const FilterPage = ({ data }) => {
   const [kegiatan, setKegiatan] = useState([]); // array kegiatan yang di filter , default kosong
   const [filter, setFilter] = useState([]); // hasil penyaringan data
   const [tagWanted, setTagWanted] = useState([]); // tag apa yang diinginkan
-
+  const [selectedKegiatan, setSelectedKegiatan] = useState([]); // handle state checkbox kegiatan. TODO refresh on submit
+  const [filterName, setFilterName] = useState([]); // membuat nama / filter baru , handler input text. TODO rename this to something
+  // const [newFilt, setNewFilt] = useState([]);
   useEffect(() => {
     filter.length === 0 && setFilter(data);
   }, [filter, data]);
@@ -43,23 +45,35 @@ const FilterPage = ({ data }) => {
     setFilter(filters);
   }, [data, kegiatan]);
 
-  const filteClickHandler = d => {
+  const filterClickHandler = d => {
     // handle click tombol filter yang sudah ada untuk mengirimkan id ke tagWanted
     // setTagWanted(prevState => [...prevState, d]);
     setTagWanted([d]);
   };
 
   const handleChange = e => {
+    // checkbox handler , untuk track id yang dimasukkan lewat checkbox
     const sub_giat = e.target.value;
-    console.log('sub_giat :>> ', sub_giat);
+    setSelectedKegiatan(prevState => [...prevState, sub_giat]);
   };
-  /*  const addFilterHandler = e => {
-    const filterName = e.target.value;
-    if (e.key == 'Enter' && filterName) {
-      setTags(prevState => [...prevState, filterName]);
-    }
-  }; */
 
+  const addFilterHandler = e => {
+    setFilterName(e.target.value);
+  };
+
+  const newFilter = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      // const filterName = e.target.value;
+      const newTag = {
+        tagId: 56352, // TODO Buat programmatically tagId dengan entah apa
+        tagName: filterName,
+        items: selectedKegiatan
+      };
+      console.log('newTag :>> ', newTag); // TODO Ganti dengan save to localStorage atau local json
+      // setNewFilt(prevState => [...prevState, newTag]); // or just Take from newTag make useEffect
+    }
+  };
   return (
     <div className="min-w- flex-row mx-5 px-5">
       <h4>Filter :</h4>
@@ -69,7 +83,7 @@ const FilterPage = ({ data }) => {
             <div
               className="flex-initial mx-1 my-2 p-5 text-sm border border-gray-800 cursor-pointer"
               key={tag.tagId}
-              onClick={() => filteClickHandler(tag.tagId)}
+              onClick={() => filterClickHandler(tag.tagId)}
             >
               {tag.tagName}
             </div>
@@ -80,7 +94,8 @@ const FilterPage = ({ data }) => {
           id="filterName"
           placeholder="Input new filter"
           className="flex-initial mx-1 my-2 p-5 text-gray-900 text-sm border-4 border-blue-400"
-          // onKeyDown={addFilterHandler}
+          onChange={addFilterHandler}
+          onKeyPress={newFilter}
         />
       </div>
       <br />
