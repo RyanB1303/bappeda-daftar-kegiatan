@@ -1,23 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { tags } from '../data/Filter';
+import { GlobalContext } from '../provider/store';
 
-const FirstPage = ({ selected }) => {
-  const nama_skpd = [...new Set(selected.map(item => item.nama_skpd))];
+const FilterPage = () => {
+  const { data } = useContext(GlobalContext);
+  const [tags, setTags] = useState([]);
+  const [items, setItems] = useState([]);
+  const [giat, setGIat] = useState([]);
+  const [filter, setFilter] = useState([]);
+
+  useEffect(() => {
+    const tagKey = tags.map(item => Object.values(item['tagName']));
+    const itemName = tags.map(item => Object.values(item['items'])); // TODO rename itemName to kegiatan key
+    const giatKey = tags.map(item => Object.values(item));
+    setGIat(giatKey);
+    setTags(tagKey);
+    setItems(itemName);
+
+    // filter data
+    const filter = data.filter(item => {
+      return items[0].includes(item.id_sub_giat);
+    });
+    console.log('filter :>> ', items[0], filter);
+    setFilter(filter);
+  }, []);
+
   return (
     <div className="min-w- flex-row mx-5 px-5">
       <h4>Filter :</h4>
       <div className="flex flex-wrap border">
-        {nama_skpd.map((skpd, i) => (
+        {tags.map((tag, i) => (
           <div
             className="flex-initial mx-1 my-2 p-5 text-sm border border-gray-800"
             key={i}
           >
-            {skpd}
+            {tag}
           </div>
         ))}
       </div>
       <br />
       <br />
-      <h4>Jumlah Kegiatan : {selected.length}</h4>
+      <h4>Jumlah Kegiatan : {filter.length}</h4>
       <table className="align-self-center table-auto min-w-full border">
         <thead>
           <tr>
@@ -34,7 +57,7 @@ const FirstPage = ({ selected }) => {
           </tr>
         </thead>
         <tbody>
-          {selected.map((item, i) => (
+          {filter.map((item, i) => (
             <tr key={i}>
               <td className="p-5 border border-gray-600">{i + 1}</td>
               <td className="p-5 border border-gray-600">{item.nama_skpd}</td>
@@ -63,4 +86,4 @@ const FirstPage = ({ selected }) => {
   );
 };
 
-export default FirstPage;
+export default FilterPage;
