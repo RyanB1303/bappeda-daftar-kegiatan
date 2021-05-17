@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { tags } from '../data/Filter';
+import Table from '../components/Table';
+// import NewFilterInput from '../components/NewFilterInput';
+import Filter from '../components/Filter';
+import ReactPaginate from 'react-paginate';
+
 // App Flow
 /* 
   1. App get data from API and save it in global state -> in provider/store.js
@@ -57,98 +62,24 @@ const FilterPage = ({ data }) => {
     setSelectedKegiatan(prevState => [...prevState, sub_giat]);
   };
 
-  const addFilterHandler = e => {
-    setFilterName(e.target.value);
-  };
-
-  const newFilter = e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      // const filterName = e.target.value;
-      const newTag = {
-        tagId: 56352, // TODO Buat programmatically tagId dengan entah apa
-        tagName: filterName,
-        items: selectedKegiatan
-      };
-      console.log('newTag :>> ', newTag); // TODO Ganti dengan save to localStorage atau local json
-      // setNewFilt(prevState => [...prevState, newTag]); // or just Take from newTag make useEffect
-    }
-  };
   return (
     <div className="min-w- flex-row mx-5 px-5">
       <h4>Filter :</h4>
       <div className="flex flex-wrap p-3 border border-black">
         {tags.length && // TODO : Add highlihgt class to indicate filter selected
-          tags.map(tag => (
-            <div
-              className="flex-initial mx-1 my-2 p-5 text-sm border border-gray-800 cursor-pointer"
-              key={tag.tagId}
-              onClick={() => filterClickHandler(tag.tagId)}
-            >
-              {tag.tagName}
-            </div>
+          tags.map((tag, index) => (
+            <Filter
+              key={index}
+              tagId={tag.tagId}
+              tagName={tag.tagName}
+              filterClickHandler={filterClickHandler}
+            />
           ))}
-        <input
-          type="text"
-          name="filterName"
-          id="filterName"
-          placeholder="Input new filter"
-          className="flex-initial mx-1 my-2 p-5 text-gray-900 text-sm border-4 border-blue-400"
-          onChange={addFilterHandler}
-          onKeyPress={newFilter}
-        />
       </div>
       <br />
       <br />
       <h4>Jumlah Kegiatan : {filter.length}</h4>
-      <table className="align-self-center table-auto min-w-full border">
-        <thead>
-          <tr>
-            <th className="mx-5 p-5 border border-gray-900">No.</th>
-            <th className="mx-5 p-5 border border-gray-900">SKPD</th>
-            <th className="mx-5 p-5 text-left border border-gray-900">
-              Nama Sub Kegiatan
-            </th>
-
-            <th className="mx-5 p-5 border border-gray-900">ID Sub Kegiatan</th>
-            <th className="mx-5 p-5 border border-gray-900">Tahun Kegiatan</th>
-            <th className="mx-5 p-5 border border-gray-900">Pagu</th>
-            <th className="mx-5 p-5 border border-gray-900">Filter </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filter.map((item, i) => (
-            <tr key={i}>
-              <td className="p-5 text-center border border-gray-600">
-                {i + 1}
-              </td>
-              <td className="p-5 border border-gray-600">{item.nama_skpd}</td>
-              <td className="p-5 border border-gray-600">
-                {item.nama_sub_giat}
-              </td>
-              <td className="p-5 text-center border border-gray-600">
-                {item.id_sub_giat}
-              </td>
-              <td className="p-5 text-center border border-gray-600">
-                {item.tahun}
-              </td>
-              <td className="p-5 border border-gray-600">
-                {item.pagu &&
-                  item.pagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              </td>
-              <td className="p-5 text-center border border-gray-600">
-                <input
-                  type="checkbox"
-                  name="sub_giat"
-                  id={item.id_sub_giat}
-                  value={item.id_sub_giat}
-                  onChange={handleChange}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table filter={filter} handleChange={handleChange} />
     </div>
   );
 };
