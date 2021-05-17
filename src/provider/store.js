@@ -1,9 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-const endPoint = '/v_bl/109'; // TODO : Change with API
+const endPoint = 'response.json'; // TODO : Change with API
+// const endPoint = '/v_bl/109'; // TODO : Change with API
 export const GlobalContext = createContext();
 // export const FirstPageContext = createContext(); // TODO : for refactor later
-
+// TODO : refactor global data to be small bites state to share , eg . id_kegiatan, nama_kegiatan | don't take all the item !!!!!!!!!!
 export const GlobalContextProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [wilayah, setWilayah] = useState();
@@ -23,11 +24,6 @@ export const GlobalContextProvider = ({ children }) => {
           isError: true
         }));
       }
-      // const results = await response.json();
-      // const resData = await results.data;
-      // setData to result
-
-      // setData(resData);
     };
     fetchData();
   }, []);

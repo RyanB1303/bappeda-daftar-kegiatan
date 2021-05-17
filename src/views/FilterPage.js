@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { tags } from '../data/Filter';
 import Table from '../components/Table';
 // import NewFilterInput from '../components/NewFilterInput';
-import Filter from '../components/Filter';
+import Filter from '../components/FilterButton';
 import ReactPaginate from 'react-paginate';
 
 // App Flow
@@ -23,8 +23,19 @@ const FilterPage = ({ data }) => {
   const [selectedKegiatan, setSelectedKegiatan] = useState([]); // handle state checkbox kegiatan. TODO refresh on submit
   const [filterName, setFilterName] = useState([]); // membuat nama / filter baru , handler input text. TODO rename this to something
   // const [newFilt, setNewFilt] = useState([]);
+  const [totalPagu, setTotalPagu] = useState('');
   useEffect(() => {
     filter.length === 0 && setFilter(data);
+    const paguReducer =
+      filter &&
+      filter.reduce((a, b) => {
+        return a + parseInt(b.pagu ?? 0);
+      }, 0);
+    console.log(
+      'paguReducer :>> ',
+      paguReducer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    );
+    setTotalPagu(paguReducer);
   }, [filter, data]);
 
   useEffect(() => {
@@ -78,7 +89,13 @@ const FilterPage = ({ data }) => {
       </div>
       <br />
       <br />
-      <h4>Jumlah Kegiatan : {filter.length}</h4>
+      <div className="keterangan flex justify-between mb-3">
+        <h4>Jumlah Kegiatan : {filter.length}</h4>
+        <h4 className="space-x-5">
+          Total Pagu : {''}{' '}
+          {totalPagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        </h4>
+      </div>
       <Table filter={filter} handleChange={handleChange} />
     </div>
   );
