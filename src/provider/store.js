@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-const endPoint = 'response.json'; // TODO : Change with API
+const endPoint = '/v_bl/109'; // TODO : Change with API
 export const GlobalContext = createContext();
 // export const FirstPageContext = createContext(); // TODO : for refactor later
 
